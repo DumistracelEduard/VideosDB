@@ -1,6 +1,7 @@
 package entities;
 
 import actor.ActorsAwards;
+import fileio.ActorInputData;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,5 +21,42 @@ public class Actor {
         this.awards = awards;
     }
 
+    public Actor(ActorInputData actor) {
+        this.name = actor.getName();
+        this.description = actor.getCareerDescription();
+        this.filmography = actor.getFilmography();
+        this.awards = actor.getAwards();
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<String> getFilmography() {
+        return filmography;
+    }
+
+    public void setFilmography(ArrayList<String> filmography) {
+        this.filmography = filmography;
+    }
+
+    public Map<ActorsAwards, Integer> getAwards() {
+        return awards;
+    }
+
+    public void setAwards(Map<ActorsAwards, Integer> awards) {
+        this.awards = awards;
+    }
 }

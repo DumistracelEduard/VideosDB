@@ -59,7 +59,7 @@ public final class Constants {
     public static final String ID_STRING = "id";
     public static final String LARGE = "large";
     public static final String NO_VALUES = "recommendation_no_values";
-    public static final String TESTS_PATH = "test_db/test_files/";
+    public static final String TESTS_PATH = "./test_db/test_files/";
     public static final String OUT_PATH = "result/out_";
     public static final String REF_PATH = "ref";
     public static final String RESULT_PATH = "result";

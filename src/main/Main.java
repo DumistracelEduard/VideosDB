@@ -3,6 +3,7 @@ package main;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import database.Data_Store;
 import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -71,7 +73,22 @@ public final class Main {
         JSONArray arrayResult = new JSONArray();
 
         //TODO add here the entry point to your implementation
-        
+        Data_Store data_store = new Data_Store();
+        data_store.AddActor(input.getActors());
+        data_store.AddMovie(input.getMovies());
+        data_store.AddUser(input.getUsers());
+        data_store.AddTvShow(input.getSerials());
+        data_store.AddCommands(input.getCommands());
+        data_store.whichCommands();
+
+        int id;
+        String message;
+        for(int key : data_store.getListCommands().keySet()){
+            id = data_store.getListCommands().get(key).getActionid();
+            message = data_store.getListCommands().get(key).getMessage();
+            arrayResult.add(fileWriter.writeFile(id, message, message));
+        }
+
         fileWriter.closeJSON(arrayResult);
     }
 }
