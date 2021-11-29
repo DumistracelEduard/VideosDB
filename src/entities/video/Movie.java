@@ -9,6 +9,7 @@ public class Movie extends Video {
     private int duration;
     private double rating;
     private List<Double> ratings;
+    int number_favorite;
 
     public Movie(String title, ArrayList<String> cast,
                  List<String> genres, int year,
@@ -16,12 +17,14 @@ public class Movie extends Video {
         super(title, year, cast, genres);
         this.duration = duration;
         this.ratings = new ArrayList<>();
+        this.number_favorite = 0;
     }
 
     public Movie(MovieInputData movie) {
         super(movie.getTitle(), movie.getYear(), movie.getCast(), movie.getGenres());
         this.duration = movie.getDuration();
         this.ratings = new ArrayList<>();
+        this.number_favorite = 0;
     }
 
     public void rating_movie() {
@@ -31,7 +34,22 @@ public class Movie extends Video {
             sum += ratings.get(i);
         }
 
-        this.rating = sum / ratings.size();
+        if(sum == 0)
+            this.rating = 0;
+        else
+            this.rating = sum / ratings.size();
+    }
+
+    public void add_favorite() {
+        this.number_favorite += 1;
+    }
+
+    public int getNumber_favorite() {
+        return number_favorite;
+    }
+
+    public void setNumber_favorite(int number_favorite) {
+        this.number_favorite = number_favorite;
     }
 
     public double getRating() {

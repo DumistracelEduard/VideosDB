@@ -1,5 +1,7 @@
 package entities.video;
 
+import command.Command;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,28 @@ public abstract class Video {
         this.year = year;
         this.cast = cast;
         this.genres = genres;
+    }
+
+    public int year_exist(Command command) {
+        if(command.getFilters().get(0).get(0) == null) {
+            return 1;
+        }
+        if(command.getFilters().get(0).get(0).equals(String.valueOf(year))){
+            return 1;
+        }
+        return 0;
+    }
+
+    public int genre_exist(Command command){
+        if(command.getFilters().get(1) == null){
+            return 1;
+        }
+        for(int i = 0; i < genres.size(); ++i) {
+            if(genres.get(i).equals(command.getFilters().get(1).get(0))) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     public String getTitle() {

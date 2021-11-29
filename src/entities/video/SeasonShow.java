@@ -15,13 +15,15 @@ public class SeasonShow {
     }
 
     public double rating_season(){
-        double average,  sum = 0;
+        double sum = 0;
         for(int i = 0; i < ratings.size(); ++i) {
             sum += ratings.get(i);
         }
-        average = sum / ratings.size();
-
-        return average;
+        if(sum == 0) {
+            return 0;
+        } else {
+            return sum / ratings.size();
+        }
     }
 
     public int getCurrSeason() {

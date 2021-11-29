@@ -18,7 +18,7 @@ public class Command {
     private int number;
     private double grade;
     private int seasonNumber;
-    private List<List<String>> filters = new ArrayList<>();
+    private List<List<String>> filters;
 
     private String message;
 
