@@ -1,37 +1,29 @@
 package database;
 
-public class ActorSort implements Comparable<ActorSort>{
-    private String name;
-    private Double ratings;
+public class ActorSort implements Comparable<ActorSort> {
+    private final String name;
+    private final Double ratings;
 
-    public ActorSort(String name, Double ratings) {
+    public ActorSort(final String name, final Double ratings) {
         this.name = name;
         this.ratings = ratings;
     }
 
     @Override
-    public int compareTo(ActorSort other) {
-        return this.ratings < other.ratings ? -1 : this.ratings > other.ratings ? 1 : 0;
+    public final int compareTo(final ActorSort other) {
+        return this.ratings.compareTo(other.ratings);
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getRatings() {
+    public final Double getRatings() {
         return ratings;
     }
 
-    public void setRatings(Double ratings) {
-        this.ratings = ratings;
-    }
-
     @Override
-    public String toString() {
+    public final String toString() {
         return name;
     }
 }

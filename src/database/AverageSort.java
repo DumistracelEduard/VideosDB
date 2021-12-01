@@ -3,48 +3,64 @@ package database;
 import command.Command;
 import entities.Actor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
 
 public class AverageSort {
-    public ArrayList<ActorSort> actorSorts;
+    private ArrayList<ActorSort> actorSorts;
 
-    public AverageSort(HashMap<String, Actor> ListActor, Command command){
-        this.actorSorts = new ArrayList<>(command.getNumber());
-        ArrayList<ActorSort> list= new ArrayList<>();
+    public AverageSort() {
+        this.actorSorts = new ArrayList<>();
+    }
 
-        for(String key : ListActor.keySet()) {
-            Actor actor = ListActor.get(key);
-            if(actor.getAverage() != 0) {
+    /**
+     * sorteaza lista si aduce primii N , daca list.size() < N atunci returneaza toata lista
+     * @param listActor
+     * @param command
+     */
+    public void averageSort(final HashMap<String, Actor> listActor, final Command command) {
+        ArrayList<ActorSort> list = new ArrayList<>();
+
+        for (String key : listActor.keySet()) {
+            Actor actor = listActor.get(key);
+            if (actor.getAverage() != 0) {
                 ActorSort actorSort = new ActorSort(actor.getName(), actor.getAverage());
-               list.add(actorSort);
+                list.add(actorSort);
             }
         }
         Comparator<ActorSort> comparator = new Comparator<ActorSort>() {
             @Override
-            public int compare(ActorSort o1, ActorSort o2) {
+            public int compare(final ActorSort o1, final ActorSort o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
         list.sort(comparator);
         Collections.sort(list);
-        if(command.getSortType().equals("desc")){
+        if (command.getSortType().equals("desc")) {
             Collections.reverse(list);
         }
-        if(command.getNumber() > list.size()){
+        if (command.getNumber() > list.size()) {
             this.actorSorts = list;
         } else {
-            for(int i = 0; i < command.getNumber(); ++i) {
+            for (int i = 0; i < command.getNumber(); ++i) {
                 this.actorSorts.add(list.get(i));
             }
         }
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return actorSorts + "]";
     }
 
-    public void message(Command command) {
+    /**
+     * Salveaza mesajul
+     * @param command
+     */
+    public final void message(final Command command) {
         command.setMessage("Query result: "  + actorSorts.toString());
     }
 }

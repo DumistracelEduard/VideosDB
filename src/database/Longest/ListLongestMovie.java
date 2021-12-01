@@ -3,7 +3,6 @@ package database.Longest;
 import command.Command;
 import database.QueryObject;
 import entities.video.Movie;
-import entities.video.TvShow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,65 +10,70 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class ListLongestMovie {
-    public ArrayList<QueryObject> listShow;
+  private ArrayList<QueryObject> listMovie;
 
-    public ListLongestMovie(HashMap<String, Movie> ListMovie, Command command) {
-        this.listShow = new ArrayList<>();
+  public ListLongestMovie(final HashMap<String, Movie> listMovie, final Command command) {
+    this.listMovie = new ArrayList<>();
 
-        for(String key : ListMovie.keySet()) {
-            ListMovie.get(key).getDuration();
-            if(ListMovie.get(key).genre_exist(command) == 0) {
-                continue;
-            }
+    for (String key : listMovie.keySet()) {
+      listMovie.get(key).getDuration();
+      if (listMovie.get(key).genreExist(command) == 0) {
+        continue;
+      }
 
-            if(ListMovie.get(key).year_exist(command) == 0) {
-                continue;
-            }
-            QueryObject queryObject = new QueryObject(ListMovie.get(key).getTitle(),ListMovie.get(key).getDuration());
-            this.listShow.add(queryObject);
-        }
+      if (listMovie.get(key).yearExist(command) == 0) {
+        continue;
+      }
+      QueryObject queryObject =
+          new QueryObject(listMovie.get(key).getTitle(), listMovie.get(key).getDuration());
+      this.listMovie.add(queryObject);
     }
+  }
 
-    public void sortLongest(Command command) {
-        Comparator<QueryObject> comparatorTime = new Comparator<QueryObject>() {
-            @Override
-            public int compare(QueryObject o1, QueryObject o2) {
-                return o1.getNumber() < o2.getNumber() ? -1
-                        : o1.getNumber() > o2.getNumber()? 1
-                        : 0;
-            }
+  /**
+   * Sorteaza lista de movie in functie de durate si nume
+   * @param command
+   */
+  public void sortLongest(final Command command) {
+    Comparator<QueryObject> comparatorTime =
+        new Comparator<QueryObject>() {
+          @Override
+          public int compare(final QueryObject o1, final QueryObject o2) {
+            return o1.getNumber() < o2.getNumber() ? -1 : o1.getNumber() > o2.getNumber() ? 1 : 0;
+          }
         };
-        Comparator<QueryObject> comparatorName = new Comparator<QueryObject>() {
-            @Override
-            public int compare(QueryObject o1, QueryObject o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
+    Comparator<QueryObject> comparatorName =
+        new Comparator<QueryObject>() {
+          @Override
+          public int compare(final QueryObject o1, final QueryObject o2) {
+            return o1.getName().compareTo(o2.getName());
+          }
         };
 
-        this.listShow.sort(comparatorName);
-        this.listShow.sort(comparatorTime);
+    this.listMovie.sort(comparatorName);
+    this.listMovie.sort(comparatorTime);
 
-        if(command.getNumber() > this.listShow.size()) {
-            command.setNumber(this.listShow.size());
-        }
-
-        if(command.getSortType().equals("desc")) {
-            Collections.reverse(this.listShow);
-        }
-
-        ArrayList<QueryObject> copyList = new ArrayList<>();
-        if(command.getNumber() > this.listShow.size()) {
-            command.setNumber(this.listShow.size());
-        }
-        for(int i = 0; i < command.getNumber(); ++i) {
-            copyList.add(this.listShow.get(i));
-        }
-
-        command.setMessage("Query result: " + copyList.toString());
+    if (command.getNumber() > this.listMovie.size()) {
+      command.setNumber(this.listMovie.size());
     }
 
-    @Override
-    public String toString() {
-        return listShow + "]";
+    if (command.getSortType().equals("desc")) {
+      Collections.reverse(this.listMovie);
     }
+
+    ArrayList<QueryObject> copyList = new ArrayList<>();
+    if (command.getNumber() > this.listMovie.size()) {
+      command.setNumber(this.listMovie.size());
+    }
+    for (int i = 0; i < command.getNumber(); ++i) {
+      copyList.add(this.listMovie.get(i));
+    }
+
+    command.setMessage("Query result: " + copyList.toString());
+  }
+
+  @Override
+  public final String toString() {
+    return listMovie + "]";
+  }
 }

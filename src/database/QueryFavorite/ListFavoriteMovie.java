@@ -4,70 +4,78 @@ import command.Command;
 import database.QueryObject;
 import entities.video.Movie;
 
-import java.awt.desktop.OpenURIEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
 public class ListFavoriteMovie {
-    ArrayList<QueryObject> list;
+    private final ArrayList<QueryObject> list;
 
     public ListFavoriteMovie() {
         this.list = new ArrayList<>();
     }
 
-    public void ListGenerate(Command command, HashMap<String, Movie> ListMovie) {
-        for(String key : ListMovie.keySet()) {
-            Movie movie = ListMovie.get(key);
-            if(movie.getNumber_favorite() == 0) {
+    /**
+     * genereaza lista dupa criteriile date
+     * @param command
+     * @param listMovie
+     */
+    public void listGenerate(final Command command, final HashMap<String, Movie> listMovie) {
+        for (String key : listMovie.keySet()) {
+            Movie movie = listMovie.get(key);
+            if (movie.getNumberFavorite() == 0) {
                 continue;
             }
-            if(movie.year_exist(command) == 0) {
+            if (movie.yearExist(command) == 0) {
                 continue;
             }
-            if(movie.genre_exist(command) == 0) {
+            if (movie.genreExist(command) == 0) {
                 continue;
             }
-            QueryObject queryObject = new QueryObject(movie.getTitle(), movie.getNumber_favorite());
+            QueryObject queryObject = new QueryObject(movie.getTitle(), movie.getNumberFavorite());
             list.add(queryObject);
         }
     }
 
-    public void sort(Command command) {
+    /**
+     * sorteaza lista si returneaza primele N elem
+     * @param command
+     */
+    public void sort(final Command command) {
         Comparator<QueryObject> comparatorLexico = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
 
         Comparator<QueryObject> comparatorNumber = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getNumber() < o2.getNumber() ? -1
-                        : o1.getNumber() > o2.getNumber()? 1
+                        : o1.getNumber() > o2.getNumber() ? 1
                         : 0;
             }
         };
         this.list.sort(comparatorLexico);
         this.list.sort(comparatorNumber);
-        if(command.getNumber() > list.size()) {
+        if (command.getNumber() > list.size()) {
             command.setNumber(list.size());
         }
 
-        if(command.getSortType().equals("desc")) {
+        if (command.getSortType().equals("desc")) {
             Collections.reverse(this.list);
         }
 
         ArrayList<QueryObject> copyArray = new ArrayList<>();
-        for(int i = 0; i < command.getNumber(); ++i) {
+        for (int i = 0; i < command.getNumber(); ++i) {
             copyArray.add(this.list.get(i));
         }
         command.setMessage("Query result: " + copyArray.toString());
         }
         @Override
-        public String toString() {
+        public final String toString() {
             return list + "]";
         }
 }

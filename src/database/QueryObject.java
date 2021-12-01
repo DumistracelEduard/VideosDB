@@ -1,32 +1,24 @@
 package database;
 
 public class QueryObject {
-    private String name;
-    private int number;
+    private final String name;
+    private final int number;
 
-    public QueryObject(String name, int number) {
+    public QueryObject(final String name, final int number) {
         this.name = name;
         this.number = number;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNumber() {
+    public final int getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
     @Override
-    public String toString() {
+    public final String toString() {
         return name;
     }
 }
