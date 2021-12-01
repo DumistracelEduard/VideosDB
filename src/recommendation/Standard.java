@@ -9,28 +9,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Standard {
-    private ArrayList<Movie> movieRecom;
-    private ArrayList<TvShow> tvShowsRecom;
-    private HashMap<String, User> ListUser;
+  private ArrayList<Movie> movieRecom;
+  private ArrayList<TvShow> tvShowsRecom;
+  private final HashMap<String, User> listUser;
 
-    public Standard(HashMap<String, User> ListUser) {
-        this.ListUser = ListUser;
-    }
+  public Standard(final HashMap<String, User> listUser) {
+    this.listUser = listUser;
+  }
 
-    public void StandardRun(Command command, ArrayList<TvShow> tvShowsRecom, ArrayList<Movie> movieRecom) {
-        User user = ListUser.get(command.getUsername());
-        for(int i = 0; i < movieRecom.size(); ++i) {
-            if(!user.getMovie_seen().containsKey(movieRecom.get(i).getTitle())) {
-                command.setMessage("StandardRecommendation result: " + movieRecom.get(i).getTitle());
-                return;
-            }
-        }
-        for(int i = 0; i < tvShowsRecom.size(); ++i) {
-            if(!user.getMovie_seen().containsKey(tvShowsRecom.get(i).getTitle())) {
-                command.setMessage("StandardRecommendation result: " + tvShowsRecom.get(i).getTitle());
-                return;
-            }
-        }
-        command.setMessage("StandardRecommendation cannot be applied!");
+  /**
+   * cauta in lista de video primul video nevazut de user
+   * @param command
+   * @param tvShowArrayList
+   * @param movieArrayList
+   */
+  public void standardRun(
+      final Command command,
+      final ArrayList<TvShow> tvShowArrayList,
+      final ArrayList<Movie> movieArrayList) {
+    User user = listUser.get(command.getUsername());
+    for (int i = 0; i < movieArrayList.size(); ++i) {
+      if (!user.getMovieSeen().containsKey(movieArrayList.get(i).getTitle())) {
+        command.setMessage("StandardRecommendation result: " + movieArrayList.get(i).getTitle());
+        return;
+      }
     }
+    for (int i = 0; i < tvShowArrayList.size(); ++i) {
+      if (!user.getMovieSeen().containsKey(tvShowArrayList.get(i).getTitle())) {
+        command.setMessage("StandardRecommendation result: " + tvShowArrayList.get(i).getTitle());
+        return;
+      }
+    }
+    command.setMessage("StandardRecommendation cannot be applied!");
+  }
 }

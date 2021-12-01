@@ -1,32 +1,24 @@
 package database;
 
 public class ActorAwards {
-    private String name;
-    private Integer number_awards;
+    private final String name;
+    private final Integer numberAwards;
 
-    public ActorAwards(String name, Integer number_awards) {
+    public ActorAwards(final String name, final Integer numberAwards) {
         this.name = name;
-        this.number_awards = number_awards;
+        this.numberAwards = numberAwards;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getNumber_awards() {
-        return number_awards;
-    }
-
-    public void setNumber_awards(Integer number_awards) {
-        this.number_awards = number_awards;
+    public final Integer getNumberAwards() {
+        return numberAwards;
     }
 
     @Override
-    public String toString() {
-        return name ;
+    public final String toString() {
+        return name;
     }
 }

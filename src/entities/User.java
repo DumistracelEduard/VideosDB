@@ -10,58 +10,70 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String username;
-    private String subscriptionType;
-    private Map<String, Integer> movie_seen;
-    private ArrayList<String> favoriteMovies;
-    private HashMap<String, Integer> movie_rating;
-    private HashMap<String, Integer> tvshow_rating;
-    private Integer number_ratings;
+    private final String username;
+    private final String subscriptionType;
+    private final Map<String, Integer> movieSeen;
+    private final ArrayList<String> favoriteMovies;
+    private final HashMap<String, Integer> movieRating;
+    private HashMap<String, Integer> tvshowRating;
+    private Integer numberRatings;
 
-    public User(String username, String subscriptionType,
-                Map<String, Integer> movie_seen,
-                ArrayList<String> favoriteMovies) {
+    public User(final String username, final String subscriptionType,
+                final Map<String, Integer> movieSeen,
+                final ArrayList<String> favoriteMovies) {
         this.username = username;
         this.subscriptionType = subscriptionType;
-        this.movie_seen = movie_seen;
+        this.movieSeen = movieSeen;
         this.favoriteMovies = favoriteMovies;
-        this.movie_rating = new HashMap<>();
-        this.tvshow_rating = new HashMap<>();
-        this.number_ratings = 0;
+        this.movieRating = new HashMap<>();
+        this.tvshowRating = new HashMap<>();
+        this.numberRatings = 0;
     }
 
-    public User(UserInputData user) {
+    public User(final UserInputData user) {
         this.username = user.getUsername();
         this.subscriptionType = user.getSubscriptionType();
-        this.movie_seen = user.getHistory();
+        this.movieSeen = user.getHistory();
         this.favoriteMovies = user.getFavoriteMovies();
-        this.movie_rating = new HashMap<>();
-        this.number_ratings = 0;
-        this.tvshow_rating = new HashMap<>();
+        this.movieRating = new HashMap<>();
+        this.numberRatings = 0;
+        this.tvshowRating = new HashMap<>();
     }
 
-    public void add_view(Command command) {
+    /**
+     * Adauga de cate ori s-a vazut un video in movieSeen
+     */
+    public void addView(final Command command) {
         Integer view;
-        if(movie_seen.containsKey(command.getTitle()))
-            view = movie_seen.get(command.getTitle()) + 1;
-        else
+        if (movieSeen.containsKey(command.getTitle())) {
+            view = movieSeen.get(command.getTitle()) + 1;
+        } else {
             view = 1;
-        movie_seen.put(command.getTitle(), view);
-        command.setMessage("success -> " + command.getTitle() +" was viewed with total views of " + view);
+        }
+        movieSeen.put(command.getTitle(), view);
+        command.setMessage("success -> " + command.getTitle()
+                + " was viewed with total views of " + view);
     }
 
-    public void add_favorite(Command command, HashMap<String, Movie> ListMovie, HashMap<String, TvShow> ListTvShow) {
-        if(movie_seen.containsKey(command.getTitle())){
-            for(int i = 0; i < favoriteMovies.size(); ++i) {
-                if(favoriteMovies.get(i).equals(command.getTitle())){
-                    command.setMessage("error -> " + command.getTitle() + " is already in favourite list");
+    /**
+     * Adauga un video la favorite daca este vazut. Daca este deja favorit da mesajul corespunzator
+     * sau daca nu este vizualizat. Daca este adaugat crestem numarul de vizualizari ale
+     * videoclipului.
+     */
+    public void addFavorite(final Command command, final HashMap<String, Movie> listMovie,
+                            final HashMap<String, TvShow> listTvShow) {
+        if (movieSeen.containsKey(command.getTitle())) {
+            for (int i = 0; i < favoriteMovies.size(); ++i) {
+                if (favoriteMovies.get(i).equals(command.getTitle())) {
+                    command.setMessage("error -> " + command.getTitle()
+                            + " is already in favourite list");
                     return;
                 }
             }
-            if(ListMovie.containsKey(command.getTitle())) {
-                ListMovie.get(command.getTitle()).add_favorite();
-            } else if(ListTvShow.containsKey(command.getTitle())) {
-                ListTvShow.get(command.getTitle()).add_favorite();
+            if (listMovie.containsKey(command.getTitle())) {
+                listMovie.get(command.getTitle()).addFavorite();
+            } else if (listTvShow.containsKey(command.getTitle())) {
+                listTvShow.get(command.getTitle()).addFavorite();
             }
             this.favoriteMovies.add(command.getTitle());
             command.setMessage("success -> " + command.getTitle() + " was added as favourite");
@@ -70,34 +82,44 @@ public class User {
         }
     }
 
-    public void add_ratings_tvshow(Command command, HashMap<String, TvShow> ListTvShow) {
-        if(movie_seen.containsKey(command.getTitle())) {
+    /**
+     * In aceasta functie adaugam la serial rating pe  un sezon din lista de seriale daca nu a mai
+     * facut asta acest utilizator.
+     * @param command lista de comenzi
+     * @param listTvShow lista de seriale
+     */
+    public void addRatingsTvshow(final Command command, final HashMap<String, TvShow> listTvShow) {
+        if (movieSeen.containsKey(command.getTitle())) {
             String key = command.getTitle().concat(String.valueOf(command.getSeasonNumber()));
-            if(!tvshow_rating.containsKey(key)){
-                this.number_ratings += 1;
-                tvshow_rating.put(key, 0);
-                ListTvShow.get(command.getTitle()).add_rating(command);
-                ListTvShow.get(command.getTitle()).rating_total();
-                command.setMessage("success -> " + command.getTitle() + " was rated with "+ command.getGrade()+" by " + command.getUsername());
+            if (!tvshowRating.containsKey(key)) {
+                this.numberRatings += 1;
+                tvshowRating.put(key, 0);
+                listTvShow.get(command.getTitle()).addRating(command);
+                listTvShow.get(command.getTitle()).ratingTotal();
+                command.setMessage("success -> " + command.getTitle() + " was rated with "
+                         + command.getGrade() + " by " + command.getUsername());
             } else {
                 command.setMessage("error -> " + command.getTitle() + " has been already rated");
             }
         } else {
             command.setMessage("error -> " + command.getTitle() + " is not seen");
         }
-
-
-
     }
 
-    public void add_ratings_video(Command command, HashMap<String, Movie> ListMovie){
-        if(!movie_rating.containsKey(command.getTitle())) {
-            if (movie_seen.containsKey(command.getTitle())) {
-                this.number_ratings += 1;
-                movie_rating.put(command.getTitle(), 0);
-                ListMovie.get(command.getTitle()).getRatings().add(command.getGrade());
-                ListMovie.get(command.getTitle()).rating_movie();
-                command.setMessage("success -> " + command.getTitle() + " was rated with "+ command.getGrade()+" by " + command.getUsername());
+    /**
+     * Adauga rating la movie daca nu a mai facut asta acest utilizator.
+     * @param command comanda
+     * @param listMovie lista de filme
+     */
+    public void addRatingsVideo(final Command command, final HashMap<String, Movie> listMovie) {
+        if (!movieRating.containsKey(command.getTitle())) {
+            if (movieSeen.containsKey(command.getTitle())) {
+                this.numberRatings += 1;
+                movieRating.put(command.getTitle(), 0);
+                listMovie.get(command.getTitle()).getRatings().add(command.getGrade());
+                listMovie.get(command.getTitle()).ratingMovie();
+                command.setMessage("success -> " + command.getTitle() + " was rated with "
+                        + command.getGrade() + " by " + command.getUsername());
             } else {
                 command.setMessage("error -> " + command.getTitle() + " is not seen");
             }
@@ -106,59 +128,23 @@ public class User {
         }
     }
 
-    public String getUsername() {
+    public final String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getSubscriptionType() {
+    public final String getSubscriptionType() {
         return subscriptionType;
     }
 
-    public void setSubscriptionType(String subscriptionType) {
-        this.subscriptionType = subscriptionType;
+    public final Map<String, Integer> getMovieSeen() {
+        return movieSeen;
     }
 
-    public Map<String, Integer> getMovie_seen() {
-        return movie_seen;
-    }
-
-    public void setMovie_seen(Map<String, Integer> movie_seen) {
-        this.movie_seen = movie_seen;
-    }
-
-    public ArrayList<String> getFavoriteMovies() {
+    public final ArrayList<String> getFavoriteMovies() {
         return favoriteMovies;
     }
 
-    public void setFavoriteMovies(ArrayList<String> favoriteMovies) {
-        this.favoriteMovies = favoriteMovies;
-    }
-
-    public Integer getNumber_ratings() {
-        return number_ratings;
-    }
-
-    public void setNumber_ratings(Integer number_ratings) {
-        this.number_ratings = number_ratings;
-    }
-
-    public HashMap<String, Integer> getMovie_rating() {
-        return movie_rating;
-    }
-
-    public void setMovie_rating(HashMap<String, Integer> movie_rating) {
-        this.movie_rating = movie_rating;
-    }
-
-    public HashMap<String, Integer> getTvshow_rating() {
-        return tvshow_rating;
-    }
-
-    public void setTvshow_rating(HashMap<String, Integer> tvshow_rating) {
-        this.tvshow_rating = tvshow_rating;
+    public final Integer getNumberRatings() {
+        return numberRatings;
     }
 }

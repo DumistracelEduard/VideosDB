@@ -4,62 +4,77 @@ import command.Command;
 import database.QueryObject;
 import entities.video.TvShow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
 
 public class ListFavoriteShows {
-    ArrayList<QueryObject> list;
+    private final ArrayList<QueryObject> list;
 
     public ListFavoriteShows() {
         this.list = new ArrayList<>();
     }
 
-    public void ListGenerate(Command command, HashMap<String, TvShow> ListShow) {
-        for(String key : ListShow.keySet()) {
-            TvShow tvShow = ListShow.get(key);
-            if(tvShow.getNumber_favorite() == 0) {
+    /**
+     * Generez lista cu filtrul dat.
+     * @param command
+     * @param listShow
+     */
+    public void listGenerate(final Command command, final HashMap<String,
+            TvShow> listShow) {
+        for (String key : listShow.keySet()) {
+            TvShow tvShow = listShow.get(key);
+            if (tvShow.getNumberFavorite() == 0) {
                 continue;
             }
-            if(tvShow.genre_exist(command) == 0) {
+            if (tvShow.genreExist(command) == 0) {
                 continue;
             }
 
-            if(tvShow.year_exist(command) == 0) {
+            if (tvShow.yearExist(command) == 0) {
                 continue;
             }
-            QueryObject queryObject = new QueryObject(tvShow.getTitle(), tvShow.getNumber_favorite());
+            QueryObject queryObject = new QueryObject(tvShow.getTitle(),
+                    tvShow.getNumberFavorite());
             list.add(queryObject);
         }
     }
 
-    public void sort(Command command) {
+    /**
+     * Ordonez si iau primele N elemente.
+     * @param command
+     */
+    public void sort(final Command command) {
         Comparator<QueryObject> comparatorLexico = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
 
         Comparator<QueryObject> comparatorNumber = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getNumber() < o2.getNumber() ? -1
-                        : o1.getNumber() > o2.getNumber()? 1
+                        : o1.getNumber() > o2.getNumber() ? 1
                         : 0;
             }
         };
 
         this.list.sort(comparatorLexico);
         this.list.sort(comparatorNumber);
-        if(command.getNumber() > list.size()) {
+        if (command.getNumber() > list.size()) {
             command.setNumber(list.size());
         }
 
-        if(command.getSortType().equals("desc")) {
+        if (command.getSortType().equals("desc")) {
             Collections.reverse(this.list);
         }
 
         ArrayList<QueryObject> copyArray = new ArrayList<>();
-        for(int i = 0; i < command.getNumber(); ++i) {
+        for (int i = 0; i < command.getNumber(); ++i) {
             copyArray.add(this.list.get(i));
         }
 
@@ -67,7 +82,11 @@ public class ListFavoriteShows {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return list + "]";
+    }
+
+    public final ArrayList<QueryObject> getList() {
+        return list;
     }
 }

@@ -6,77 +6,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Movie extends Video {
-    private int duration;
+    private final int duration;
     private double rating;
     private List<Double> ratings;
-    private int number_favorite;
+    private int numberFavorite;
 
 
-    public Movie(String title, ArrayList<String> cast,
-                 List<String> genres, int year,
-                 int duration) {
+    public Movie(final String title, final ArrayList<String> cast,
+                 final List<String> genres, final int year,
+                 final int duration) {
         super(title, year, cast, genres);
         this.duration = duration;
         this.ratings = new ArrayList<>();
-        this.number_favorite = 0;
+        this.numberFavorite = 0;
     }
 
-    public Movie(MovieInputData movie) {
+    public Movie(final MovieInputData movie) {
         super(movie.getTitle(), movie.getYear(), movie.getCast(), movie.getGenres());
         this.duration = movie.getDuration();
         this.ratings = new ArrayList<>();
-        this.number_favorite = 0;
+        this.numberFavorite = 0;
     }
 
-    public void rating_movie() {
+    /**
+     * calculeaza ratingul la movie
+     */
+    public void ratingMovie() {
         double sum = 0;
 
-        for(int i = 0; i < ratings.size(); ++i) {
+        for (int i = 0; i < ratings.size(); ++i) {
             sum += ratings.get(i);
         }
 
-        if(sum == 0)
+        if (sum == 0) {
             this.rating = 0;
-        else
+        } else {
             this.rating = sum / ratings.size();
+        }
     }
 
-
-
-    public void add_favorite() {
-        this.number_favorite += 1;
+    /**
+     * adauga la favorite
+     */
+    public final void addFavorite() {
+        this.numberFavorite += 1;
     }
 
-    public int getNumber_favorite() {
-        return number_favorite;
+    public final int getNumberFavorite() {
+        return numberFavorite;
     }
 
-    public void setNumber_favorite(int number_favorite) {
-        this.number_favorite = number_favorite;
-    }
-
-    public double getRating() {
+    public final double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
-    public List<Double> getRatings() {
+    public final List<Double> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<Double> ratings) {
-        this.ratings = ratings;
-    }
-
-    public int getDuration() {
+    public final int getDuration() {
         return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
 }

@@ -1,32 +1,24 @@
 package database;
 
 public class VideoRating {
-    private String name;
-    private double rating;
+    private final String name;
+    private final double rating;
 
-    public VideoRating(String name, double rating) {
+    public VideoRating(final String name, final double rating) {
         this.name = name;
         this.rating = rating;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getRating() {
+    public final double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
     @Override
-    public String toString() {
+    public final String toString() {
         return name;
     }
 }

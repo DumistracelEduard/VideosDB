@@ -12,48 +12,53 @@ import java.util.HashMap;
 public class ListUserRatings {
     private ArrayList<QueryObject> listRatings;
 
-    public ListUserRatings(HashMap<String, User> ListUser) {
+    public ListUserRatings(final HashMap<String, User> listUser) {
         this.listRatings = new ArrayList<>();
 
-        for(String key : ListUser.keySet()) {
-            User user = ListUser.get(key);
-            if(user.getNumber_ratings() == 0) {
+        for (String key : listUser.keySet()) {
+            User user = listUser.get(key);
+            if (user.getNumberRatings() == 0) {
                 continue;
             }
-            QueryObject queryObject = new QueryObject(user.getUsername(), user.getNumber_ratings());
+            QueryObject queryObject = new QueryObject(user.getUsername(), user.getNumberRatings());
             this.listRatings.add(queryObject);
         }
     }
 
-    public void sort(Command command) {
+    /**
+     * sorteaza lista si scoate N elem din ea.In caz ca N este mai mare list.size()
+     * atunci scoate toate elem din lista
+     * @param command
+     */
+    public void sort(final Command command) {
         Comparator<QueryObject> comparatorLexico = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
 
         Comparator<QueryObject> comparatorNumber = new Comparator<QueryObject>() {
             @Override
-            public int compare(QueryObject o1, QueryObject o2) {
+            public int compare(final QueryObject o1, final QueryObject o2) {
                 return o1.getNumber() < o2.getNumber() ? -1
-                        : o1.getNumber() > o2.getNumber()? 1
+                        : o1.getNumber() > o2.getNumber() ? 1
                         : 0;
             }
         };
 
         this.listRatings.sort(comparatorLexico);
         this.listRatings.sort(comparatorNumber);
-        if(command.getNumber() > listRatings.size()) {
+        if (command.getNumber() > listRatings.size()) {
             command.setNumber(listRatings.size());
         }
 
-        if(command.getSortType().equals("desc")) {
+        if (command.getSortType().equals("desc")) {
             Collections.reverse(this.listRatings);
         }
 
         ArrayList<QueryObject> copyArray = new ArrayList<>();
-        for(int i = 0; i < command.getNumber(); ++i) {
+        for (int i = 0; i < command.getNumber(); ++i) {
             copyArray.add(this.listRatings.get(i));
         }
 
@@ -61,7 +66,7 @@ public class ListUserRatings {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return listRatings + "]";
     }
 

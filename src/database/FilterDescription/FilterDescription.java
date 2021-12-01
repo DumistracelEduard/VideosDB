@@ -9,36 +9,41 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class FilterDescription {
-    ArrayList<String> actors;
+  private ArrayList<String> actors;
 
-    public FilterDescription() {
-        this.actors = new ArrayList<>();
+  public FilterDescription() {
+    this.actors = new ArrayList<>();
+  }
+
+  /**
+   * sorteaza lista de autori care au descrierea respectiva si returneaza primii N
+   * @param listActor
+   * @param command
+   */
+  public void sort(final HashMap<String, Actor> listActor, final Command command) {
+    for (String key : listActor.keySet()) {
+      Actor actor = listActor.get(key);
+      if (actor.descriptionFilter(command) == 0) {
+        continue;
+      }
+      this.actors.add(actor.getName());
     }
-
-    public void sort(HashMap<String, Actor> ListActor, Command command) {
-        for(String key : ListActor.keySet()) {
-            Actor actor = ListActor.get(key);
-            if(actor.descriptionFilter(command) == 0) {
-                continue;
-            }
-            this.actors.add(actor.getName());
-        }
-        Comparator<String> comparator = new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
+    Comparator<String> comparator = new Comparator<String>() {
+          @Override
+          public int compare(final String o1, final String o2) {
+            return o1.compareTo(o2);
+          }
         };
-        this.actors.sort(comparator);
+    this.actors.sort(comparator);
 
-        if(command.getSortType().equals("desc")) {
-            Collections.reverse(this.actors);
-        }
-        command.setMessage("Query result: " + this.actors.toString());
+    if (command.getSortType().equals("desc")) {
+      Collections.reverse(this.actors);
     }
+    command.setMessage("Query result: " + this.actors.toString());
+  }
 
-    @Override
-    public String toString() {
-        return actors + "]";
-    }
+  @Override
+  public final String toString() {
+    return actors + "]";
+  }
 }
