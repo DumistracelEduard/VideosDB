@@ -1,10 +1,10 @@
-package database.movieSortFavorite;
+package database;
 
-public class FavoriteMovie {
+public class QueryObject {
     private String name;
     private int number;
 
-    public FavoriteMovie(String name, int number) {
+    public QueryObject(String name, int number) {
         this.name = name;
         this.number = number;
     }
