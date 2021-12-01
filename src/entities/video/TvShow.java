@@ -11,6 +11,7 @@ public class TvShow extends Video{
     private ArrayList<SeasonShow> seasons;
     private double rating;
     private int number_favorite;
+    private int time;
 
     public TvShow(String title, ArrayList<String> cast,
                   ArrayList<String> genres, int numberOfSeasons,
@@ -30,6 +31,11 @@ public class TvShow extends Video{
             Season season = serial.getSeasons().get(i);
             SeasonShow seasonShow = new SeasonShow(i, season.getDuration(), season.getRatings());
             this.seasons.add(seasonShow);
+        }
+    }
+    public void time_total(){
+        for(int i = 0; i < numberOfSeasons; ++i) {
+            this.time += this.seasons.get(i).getDuration();
         }
     }
 
@@ -52,6 +58,22 @@ public class TvShow extends Video{
             return;
         }
         this.rating = sum / seasons.size();
+    }
+
+    public int getNumber_favorite() {
+        return number_favorite;
+    }
+
+    public void setNumber_favorite(int number_favorite) {
+        this.number_favorite = number_favorite;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     public double getRating() {

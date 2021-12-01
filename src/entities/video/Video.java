@@ -10,6 +10,7 @@ public abstract class Video {
     private int year;
     private List<String> cast;
     private List<String> genres;
+    private int views;
 
     public Video(String title, int year,
                  List<String> cast,
@@ -31,7 +32,7 @@ public abstract class Video {
     }
 
     public int genre_exist(Command command){
-        if(command.getFilters().get(1) == null){
+        if(command.getFilters().get(1).get(0) == null){
             return 1;
         }
         for(int i = 0; i < genres.size(); ++i) {
@@ -40,6 +41,10 @@ public abstract class Video {
             }
         }
         return 0;
+    }
+
+    public void addViews(int number) {
+        this.views += number;
     }
 
     public String getTitle() {
@@ -72,5 +77,13 @@ public abstract class Video {
 
     public void setGenres(List<String> genres) {
         this.genres = genres;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 }

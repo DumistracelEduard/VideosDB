@@ -9,7 +9,8 @@ public class Movie extends Video {
     private int duration;
     private double rating;
     private List<Double> ratings;
-    int number_favorite;
+    private int number_favorite;
+
 
     public Movie(String title, ArrayList<String> cast,
                  List<String> genres, int year,
@@ -39,6 +40,8 @@ public class Movie extends Video {
         else
             this.rating = sum / ratings.size();
     }
+
+
 
     public void add_favorite() {
         this.number_favorite += 1;
@@ -75,4 +78,5 @@ public class Movie extends Video {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
 }

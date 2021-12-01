@@ -1,6 +1,8 @@
 package entities;
 
 import command.Command;
+import entities.video.Movie;
+import entities.video.TvShow;
 import fileio.UserInputData;
 
 import java.util.ArrayList;
@@ -44,16 +46,22 @@ public class User {
             view = movie_seen.get(command.getTitle()) + 1;
         else
             view = 1;
+        movie_seen.put(command.getTitle(), view);
         command.setMessage("success -> " + command.getTitle() +" was viewed with total views of " + view);
     }
 
-    public void add_favorite(Command command) {
+    public void add_favorite(Command command, HashMap<String, Movie> ListMovie, HashMap<String, TvShow> ListTvShow) {
         if(movie_seen.containsKey(command.getTitle())){
             for(int i = 0; i < favoriteMovies.size(); ++i) {
                 if(favoriteMovies.get(i).equals(command.getTitle())){
                     command.setMessage("error -> " + command.getTitle() + " is already in favourite list");
                     return;
                 }
+            }
+            if(ListMovie.containsKey(command.getTitle())) {
+                ListMovie.get(command.getTitle()).add_favorite();
+            } else if(ListTvShow.containsKey(command.getTitle())) {
+                ListTvShow.get(command.getTitle()).add_favorite();
             }
             this.favoriteMovies.add(command.getTitle());
             command.setMessage("success -> " + command.getTitle() + " was added as favourite");
@@ -62,12 +70,14 @@ public class User {
         }
     }
 
-    public void add_ratings_tvshow(Command command) {
+    public void add_ratings_tvshow(Command command, HashMap<String, TvShow> ListTvShow) {
         if(movie_seen.containsKey(command.getTitle())) {
             String key = command.getTitle().concat(String.valueOf(command.getSeasonNumber()));
             if(!tvshow_rating.containsKey(key)){
                 this.number_ratings += 1;
                 tvshow_rating.put(key, 0);
+                ListTvShow.get(command.getTitle()).add_rating(command);
+                ListTvShow.get(command.getTitle()).rating_total();
                 command.setMessage("success -> " + command.getTitle() + " was rated with "+ command.getGrade()+" by " + command.getUsername());
             } else {
                 command.setMessage("error -> " + command.getTitle() + " has been already rated");
@@ -80,11 +90,13 @@ public class User {
 
     }
 
-    public void add_ratings_video(Command command){
+    public void add_ratings_video(Command command, HashMap<String, Movie> ListMovie){
         if(!movie_rating.containsKey(command.getTitle())) {
             if (movie_seen.containsKey(command.getTitle())) {
                 this.number_ratings += 1;
                 movie_rating.put(command.getTitle(), 0);
+                ListMovie.get(command.getTitle()).getRatings().add(command.getGrade());
+                ListMovie.get(command.getTitle()).rating_movie();
                 command.setMessage("success -> " + command.getTitle() + " was rated with "+ command.getGrade()+" by " + command.getUsername());
             } else {
                 command.setMessage("error -> " + command.getTitle() + " is not seen");
@@ -132,5 +144,21 @@ public class User {
 
     public void setNumber_ratings(Integer number_ratings) {
         this.number_ratings = number_ratings;
+    }
+
+    public HashMap<String, Integer> getMovie_rating() {
+        return movie_rating;
+    }
+
+    public void setMovie_rating(HashMap<String, Integer> movie_rating) {
+        this.movie_rating = movie_rating;
+    }
+
+    public HashMap<String, Integer> getTvshow_rating() {
+        return tvshow_rating;
+    }
+
+    public void setTvshow_rating(HashMap<String, Integer> tvshow_rating) {
+        this.tvshow_rating = tvshow_rating;
     }
 }

@@ -1,12 +1,14 @@
 package entities;
 
 import actor.ActorsAwards;
+import command.Command;
 import entities.video.Movie;
 import entities.video.TvShow;
 import fileio.ActorInputData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Actor {
@@ -62,6 +64,19 @@ public class Actor {
         } else {
             this.average = 0.0;
         }
+    }
+
+    public int descriptionFilter(Command command) {
+        String description = this.description.toLowerCase();
+        for(int i = 0; i < command.getFilters().get(2).size(); ++i) {
+            String case1 = command.getFilters().get(2).get(i).concat(" ");
+            String case2 = command.getFilters().get(2).get(i).concat(",");
+            String case3 = command.getFilters().get(2).get(i).concat(".");
+            if(!description.contains(case1) && !description.contains(case3) && !description.contains(case2)) {
+                return 0;
+            }
+        }
+        return 1;
     }
 
     @Override
